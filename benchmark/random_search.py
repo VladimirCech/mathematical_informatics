@@ -1,5 +1,6 @@
 import random
 import csv
+import matplotlib.pyplot as plt
 from objective_functions import *
 
 global_search_space = range(-5, 6)
@@ -9,6 +10,7 @@ num_iterations = 10000
 def random_search(objective_function, search_space, iterations, dimensions):
     best_solution = None
     best_fitness = float('inf')
+    iterations_values = []
     if objective_function == schwefel:
         search_space = range(-500, 501)
 
@@ -19,28 +21,10 @@ def random_search(objective_function, search_space, iterations, dimensions):
             best_solution = solution
             best_fitness = fitness
 
-    return best_solution, best_fitness
+        iterations_values.append(best_fitness)
+
+    plt.plot(iterations_values, linewidth=0.2)
+
+    return best_solution, best_fitness, iterations_values
 
 
-if __name__ == '__main__':
-    with open('random_search.csv', 'w', encoding='UTF8') as f:
-        writer = csv.writer(f)
-
-        writer.writerow(["First DeJong"])
-        for i in range(30):
-            writer.writerow(random_search(first_dejong, global_search_space, num_iterations, 5))
-        for i in range(30):
-            writer.writerow(random_search(first_dejong, global_search_space, num_iterations, 10))
-
-        writer.writerow(["Second DeJong"])
-        for i in range(30):
-            writer.writerow(random_search(second_dejong, global_search_space, num_iterations, 5))
-        for i in range(30):
-            writer.writerow(random_search(second_dejong, global_search_space, num_iterations, 10))
-
-        writer.writerow(["Schwefel"])
-        for i in range(30):
-            writer.writerow(random_search(schwefel, global_search_space, num_iterations, 5))
-        for i in range(30):
-            writer.writerow(random_search(schwefel, global_search_space, num_iterations, 10))
-        f.close()
