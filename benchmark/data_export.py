@@ -37,6 +37,8 @@ def data_export():
 
                 rs_all_iterations_values.append(rs_iterations_values)
 
+                plt.plot(rs_iterations_values, linewidth=0.5)
+
                 writer.writerow([objective.__name__, dimension, rs_best_solution, rs_fitness_values])
 
             f.close()
@@ -80,7 +82,7 @@ def data_export():
                                                                                                 initial_temperature,
                                                                                                 cooling_rate, dimension)
 
-                plt.plot(sa_iterations_values, linewidth=0.2)
+                plt.plot(sa_iterations_values, linewidth=0.5)
 
                 sa_all_iterations_values.append(sa_iterations_values)
 

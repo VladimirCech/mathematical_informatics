@@ -32,14 +32,14 @@ def acceptance_probability(old_fitness, new_fitness, temperature):
 
 
 def simulated_annealing(objective_function, search_space, initial_temperature, cooling_rate, dimensions):
+    if objective_function == schwefel:
+        search_space = range(-500, 501)
+
     solution = [random.choice(search_space) for _ in range(dimensions)]
     best_solution = solution
     temperature = initial_temperature
     fitness_values = []
     nt = 11
-
-    if objective_function == schwefel:
-        search_space = range(-500, 501)
 
     while temperature > min_temperature:
 

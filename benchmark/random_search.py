@@ -23,8 +23,6 @@ def random_search(objective_function, search_space, iterations, dimensions):
 
         iterations_values.append(best_fitness)
 
-    plt.plot(iterations_values, linewidth=0.2)
-
     return best_solution, best_fitness, iterations_values
 
 
