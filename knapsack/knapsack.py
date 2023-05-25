@@ -11,13 +11,13 @@ minimal_price = 1
 maximum_price = 50
 
 
-def knapsack_objective_function(items, selection, capacity):
-    total_weight = sum(item[1] for item, is_selected in zip(items, selection) if is_selected)
-
-    if total_weight > capacity:
-        return 0
-    else:
-        return sum(item[1] for item, is_selected in zip(items, selection) if is_selected)
+# def knapsack_objective_function(items, selection, capacity):
+#     total_weight = sum(item[1] for item, is_selected in zip(items, selection) if is_selected)
+#
+#     if total_weight > capacity:
+#         return 0
+#     else:
+#         return sum(item[1] for item, is_selected in zip(items, selection) if is_selected)
 
 
 def generate_items(num_items, min_weight, max_weight, min_price, max_price):
@@ -70,16 +70,15 @@ def simulated_annealing_solution(items):
     else:
         max_capacity = 300
 
-    total_weight = 0
-    total_price = 0
     best_weight = 0
     best_price = 0
     best_solution = []
     temperature = 10000
-    min_temperature = 1
+    min_temperature = 0.1
     cooling_rate = 0.99
     selection = [random.choice([True, False]) for _ in range(len(items))]
-    nt = 10
+    best_price_values = []
+    nt = 20
     x = 0
 
     while temperature > min_temperature:
@@ -103,16 +102,18 @@ def simulated_annealing_solution(items):
                     selection[j] = not selection[j]
             x += 1
 
+            best_price_values.append(best_price)
+
         temperature *= cooling_rate
 
     print(x)
 
-    return best_solution, best_weight, best_price
+    return best_solution, best_weight, best_price, best_price_values
 
 
 if __name__ == "__main__":
-    items = generate_items(number_of_items, minimal_weight, maximum_weight, minimal_price, maximum_price)
+    generated_items = generate_items(number_of_items, minimal_weight, maximum_weight, minimal_price, maximum_price)
 
-    print(brute_force_solution(items))
+    print(brute_force_solution(generated_items))
 
-    print(simulated_annealing_solution(items))
+    print(simulated_annealing_solution(generated_items))
