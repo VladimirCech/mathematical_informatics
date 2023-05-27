@@ -1,5 +1,6 @@
 import random
 import itertools
+import math
 
 # random.seed('random')
 
@@ -11,13 +12,20 @@ minimal_price = 1
 maximum_price = 50
 
 
-# def knapsack_objective_function(items, selection, capacity):
-#     total_weight = sum(item[1] for item, is_selected in zip(items, selection) if is_selected)
-#
-#     if total_weight > capacity:
-#         return 0
-#     else:
-#         return sum(item[1] for item, is_selected in zip(items, selection) if is_selected)
+def knapsack_objective_function(items, selection):
+    total_weight = sum(item[0] for item, is_selected in zip(items, selection) if is_selected)
+    total_price = sum(item[1] for item, is_selected in zip(items, selection) if is_selected)
+
+    return total_weight, total_price
+
+
+def metropolis(weight, price, best_price, temperature, capacity):
+    if weight > capacity:
+        return 0
+    elif price > best_price:
+        return 1
+    else:
+        return math.exp((price - best_price) / temperature)
 
 
 def generate_items(num_items, min_weight, max_weight, min_price, max_price):
@@ -70,9 +78,12 @@ def simulated_annealing_solution(items):
     else:
         max_capacity = 300
 
+    actual_weight = 0
+    actual_price = 0
     best_weight = 0
     best_price = 0
     best_solution = []
+    actual_solution = []
     temperature = 10000
     min_temperature = 0.1
     cooling_rate = 0.99
@@ -84,18 +95,17 @@ def simulated_annealing_solution(items):
     while temperature > min_temperature:
 
         for _ in range(nt):
-            total_weight = 0
-            total_price = 0
+            total_weight, total_price = knapsack_objective_function(items, selection)
 
-            for i in range(len(items)):
-                if selection[i]:
-                    total_weight += items[i][0]
-                    total_price += items[i][1]
+            if metropolis(total_weight, total_price, actual_price, temperature, max_capacity) > random.random():
+                actual_solution = [item for count, item in enumerate(items) if selection[count]]
+                actual_weight = total_weight
+                actual_price = total_price
 
-            if total_weight <= max_capacity and total_price > best_price:
-                best_solution = [item for count, item in enumerate(items) if selection[count]]
-                best_weight = total_weight
-                best_price = total_price
+            if actual_price > best_price and actual_weight <= max_capacity:
+                best_price = actual_price
+                best_weight = actual_weight
+                best_solution = actual_solution
 
             for j in range(len(items)):
                 if random.random() < 1 / len(items):
