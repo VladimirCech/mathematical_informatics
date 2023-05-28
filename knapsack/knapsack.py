@@ -126,4 +126,5 @@ if __name__ == "__main__":
 
     print(brute_force_solution(generated_items))
 
-    print(simulated_annealing_solution(generated_items))
+    solution, weight, price, _ = simulated_annealing_solution(generated_items)
+    print(solution, weight, price)
